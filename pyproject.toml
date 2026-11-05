@@ -1,0 +1,17 @@
+[project]
+name = "rag-training-lab"
+version = "0.1.0"
+description = "Kompaktes deutschsprachiges RAG-Seminar-Lab mit Teralune Orbit"
+requires-python = "==3.14.*"
+dependencies = [
+    "beautifulsoup4==4.15.0",
+    "chromadb==1.5.9",
+    "openai==3.37.0",
+    "python-dotenv==1.2.4",
+    "rank-bm25==0.2.2",
+    "tiktoken==0.14.0",
+ ]
+
+# Dieses Repository ist ein ausführbares Schulungsprojekt, kein Paket auf PyPI.
+[tool.uv]
+package = false

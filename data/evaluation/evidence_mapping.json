@@ -1,0 +1,80 @@
+{
+  "D001-E03": {
+    "status": "exact",
+    "chunks": [
+      "D001-chunk-3"
+    ]
+  },
+  "D002-E01": {
+    "status": "exact",
+    "chunks": [
+      "D002-chunk-1"
+    ]
+  },
+  "D002-E02": {
+    "status": "exact",
+    "chunks": [
+      "D002-chunk-2"
+    ]
+  },
+  "D003-E01": {
+    "status": "exact",
+    "chunks": [
+      "D003-chunk-1"
+    ]
+  },
+  "D003-E03": {
+    "status": "exact",
+    "chunks": [
+      "D003-chunk-3"
+    ]
+  },
+  "D003-E04": {
+    "status": "exact",
+    "chunks": [
+      "D003-chunk-4"
+    ]
+  },
+  "D004-E01": {
+    "status": "exact",
+    "chunks": [
+      "D004-chunk-1"
+    ]
+  },
+  "D005-E01": {
+    "status": "exact",
+    "chunks": [
+      "D005-chunk-1"
+    ]
+  },
+  "D005-E02": {
+    "status": "exact",
+    "chunks": [
+      "D005-chunk-2"
+    ]
+  },
+  "D008-E01": {
+    "status": "exact",
+    "chunks": [
+      "D008-chunk-1"
+    ]
+  },
+  "D008-E02": {
+    "status": "exact",
+    "chunks": [
+      "D008-chunk-2"
+    ]
+  },
+  "D009-E01": {
+    "status": "exact",
+    "chunks": [
+      "D009-chunk-1"
+    ]
+  },
+  "D012-E01": {
+    "status": "exact",
+    "chunks": [
+      "D012-chunk-1"
+    ]
+  }
+}
