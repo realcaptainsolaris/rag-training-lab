@@ -1,109 +1,123 @@
-# RAG Training Lab: Acht Lernstationen
+# RAG Training Lab
 
-Kompaktes, deutschsprachiges Seminar-Lab für **RAG und Vektordatenbanken mit Python**. Die sieben ausführbaren Demos stammen konzeptionell aus dem größeren Buch-Lab `rag-python-lab`, verwenden aber nur einen ausgewählten Teralune-Corpus. Das vollständige MkDocs-Buch ist die unabhängige Vertiefungsreferenz.
+Dieses Repository begleitet die Schulung **„RAG und Vektordatenbanken mit Python“**. Es enthält sieben kleine, ausführbare Experimente zu Retrieval-Augmented Generation (RAG). Wir arbeiten mit einem fiktiven Dokumentbestand rund um **Teralune Orbit** und bauen die Konzepte Schritt für Schritt auf.
 
-Das Seminar verwendet **uv** für die Python-Version, virtuelle Umgebung und Paketinstallation. Ein lokal vorinstalliertes Python ist **nicht notwendig**.
+Die Beispiele sollen Mechanismen sichtbar machen und zum Experimentieren einladen. Sie sind **keine produktionsreife RAG-Anwendung**. Fachliche Vertiefungen stehen im begleitenden PDF-E-Book *Einführung in RAG mit Python*.
 
 ## Voraussetzungen
 
-- Windows 11 oder Linux, VS Code und die VS-Code-Extension **Python** von Microsoft.
-- **uv** installiert und auf dem `PATH` (`uv --version`). Git ist optional; stattdessen das Projekt-ZIP entpacken.
-- Internetzugriff auf die Paketquellen und auf die OpenAI-API. Die erste Einrichtung lädt Python 3.14 und Python-Pakete herunter.
-- Schreibrechte im Projektverzeichnis. Für die API-Demos wird ein OpenAI-Schlüssel benötigt.
+- Windows 11 oder Linux, empfohlen mit **VS Code** und der Python-Erweiterung.
+- **uv** für Python, virtuelle Umgebung und Projektabhängigkeiten (`uv --version`).
+- Das vollständige Schulungs-Repository einschließlich des Verzeichnisses `data/`.
+- Internetzugang für die erstmalige Einrichtung und für die OpenAI-API.
+- Ein bereitgestellter **OpenAI-API-Schlüssel** für die API-basierten Experimente.
 
-Python wird über `.python-version` auf **3.14** festgelegt; die Versionsvorgabe im `pyproject.toml` sowie die Paketversionen im `uv.lock` passen dazu. Die direkte Paketliste enthält bewusst **kein PyTorch und keinen lokalen Reranker**.
+Python muss nicht separat installiert sein: uv kann die im Projekt festgelegte Version **Python 3.14** herunterladen. Die Abhängigkeiten sind in `pyproject.toml` und `uv.lock` festgelegt. Für die Übungen wird **keine GPU** benötigt.
 
-## Einrichtung unter Windows (PowerShell)
+## Einrichtung
 
-Im entpackten Projektordner `rag-training-lab`:
-
-```powershell
-uv --version
-uv sync --locked
-uv run python --version
-Copy-Item .env.example .env
-```
-
-In `.env` den bereitgestellten `OPENAI_API_KEY` eintragen. **Niemals den API-Schlüssel in Git hochladen oder in Screenshots zeigen.**
-
-Wenn Python 3.14 noch nicht vorhanden ist, lädt uv es automatisch. Falls die Unternehmens-Firewall Downloads blockiert, muss die IT den Zugriff vor Schulungsbeginn ermöglichen.
-
-VS Code öffnen, im Projektordner mit **Python: Select Interpreter** den Interpreter `.venv\Scripts\python.exe` auswählen. Eine manuelle Aktivierung von `.venv` ist nicht erforderlich.
-
-## Einrichtung unter Linux
-
-```bash
-uv --version
-uv sync --locked
-uv run python --version
-cp .env.example .env
-```
-
-In `.env` den API-Schlüssel eintragen. VS-Code-Interpreter: `.venv/bin/python`.
-
-## Erste Beispiele
-
-Die folgenden Befehle werden **im Repository-Stammverzeichnis** ausgeführt:
+Repository klonen oder als ZIP entpacken, dann im **Projektverzeichnis** PowerShell öffnen:
 
 ```powershell
-# Ohne OpenAI-Schlüssel: Chunking demonstrieren
+uv sync --locked
+uv run python --version
+Copy-Item env.example .env
+```
+
+In der neu angelegten `.env` den bereitgestellten API-Schlüssel eintragen:
+
+```dotenv
+OPENAI_API_KEY=HIER_DEN_EIGENEN_SCHLUESSEL_EINTRAGEN
+CHAT_MODEL=gpt-4.1-mini
+EMBEDDING_MODEL=text-embedding-3-small
+```
+
+**API-Schlüssel niemals in Git hochladen oder in Screenshots zeigen.** Die Datei `env.example` ist nur eine Vorlage; ihre Beispielwerte sind keine gültigen Zugangsdaten.
+
+Unter Linux lautet der Kopierbefehl `cp env.example .env`; die übrigen uv-Befehle sind identisch. In VS Code kann als Interpreter unter Windows `.venv\Scripts\python.exe` beziehungsweise unter Linux `.venv/bin/python` ausgewählt werden. Eine manuelle Aktivierung der virtuellen Umgebung ist nicht notwendig.
+
+## Schnellstart
+
+Alle Befehle werden im **Stammverzeichnis des Repositories** ausgeführt.
+
+**Ohne API-Schlüssel** kannst du sofort Chunking und das Berechtigungsbeispiel ansehen:
+
+```powershell
 uv run python -m stations.02_chunking
-
-# Ohne OpenAI-Schlüssel: Zugriffskontrolle demonstrieren
 uv run python -m stations.07_security
+```
 
-# Mit OpenAI-Schlüssel: erste RAG-Pipeline
+**Mit API-Schlüssel** startest du die erste RAG-Demo und baust anschließend den lokalen Chroma-Index auf:
+
+```powershell
 uv run python -m stations.01_first_rag
-
-# Chroma: einmalig Index aufbauen und anschließend suchen
 uv run python -m stations.03_chroma --index
 uv run python -m stations.03_chroma
 ```
 
-Anschließend können die Stationen 4 bis 6 gegen den gespeicherten Index laufen.
+`--index` erzeugt die Dokument-Embeddings und speichert sie persistent unter `data/chroma/`. Der zweite Chroma-Aufruf verwendet den bestehenden Index. **Stationen 4 bis 6 benötigen den zuvor aufgebauten Index.**
 
-## Lernstationen
+## Die acht Lernstationen
 
-| Station | Demo | Voraussetzung |
-| --- | --- | --- |
-| RAG-Grundlagen | `uv run python -m stations.01_first_rag` | API-Schlüssel |
-| Dokumente und Chunking | `uv run python -m stations.02_chunking` | keine API |
-| Chroma und Versionsfilter | `uv run python -m stations.03_chroma --index` und anschließend ohne `--index` | API-Schlüssel |
-| Hybrid Search und RRF | `uv run python -m stations.04_hybrid` | Index und API-Schlüssel |
-| Grounding und Quellen | `uv run python -m stations.05_grounding` | Index und API-Schlüssel |
-| Evaluation | `uv run python -m stations.06_evaluation` | Index und API-Schlüssel |
-| Rechte und Sicherheit | `uv run python -m stations.07_security` | keine API |
-| Architektur und Ausblick | Folien, keine Pflicht-Demo | keine API |
+| Station | Thema und Lernziel | Experiment | Benötigt |
+| --- | --- | --- | --- |
+| 1 | **RAG-Grundlagen:** Retrieval und Antwortgenerierung unterscheiden, Scores richtig einordnen | `stations.01_first_rag` | API |
+| 2 | **Dokumentverarbeitung und Chunking:** Fixed Size, Overlap und Struktur vergleichen | `stations.02_chunking` | Dokumentdaten |
+| 3 | **Embeddings und Vektordatenbanken:** Chroma-Persistenz, semantische Suche und Versionsfilter beobachten | `stations.03_chroma` | API; beim ersten Mal `--index` |
+| 4 | **Retrieval-Strategien:** Dense Retrieval, BM25 und Reciprocal Rank Fusion (RRF) vergleichen | `stations.04_hybrid` | API und Index |
+| 5 | **Context Engineering und Grounding:** Quellenbezug und fehlende Evidenz untersuchen | `stations.05_grounding` | API und Index |
+| 6 | **Evaluation und Fehlerdiagnose:** Hit@k, Precision@k, Recall@k und MRR interpretieren | `stations.06_evaluation` | API und Index |
+| 7 | **Sicherheit und Zugriffskontrolle:** Berechtigungen anhand von Rollen und Organisationen nachvollziehen | `stations.07_security` | Dokumentdaten; keine API |
+| 8 | **Erweiterte RAG-Architekturen:** Agentic RAG, GraphRAG und Multimodal RAG einordnen | Konzeptteil der Schulung | Kein ausführbares Lab in dieser Version |
 
-Der Index muss pro Umgebung nur einmal mit `--index` erzeugt werden. Gespeicherte Dokument-Embeddings werden bei weiteren Abfragen wiederverwendet.
+Die Aufrufe für Stationen 4 bis 6:
 
-## Offline-Funktionstest
+```powershell
+uv run python -m stations.04_hybrid
+uv run python -m stations.05_grounding
+uv run python -m stations.06_evaluation
+```
+
+## Was du selbst ausprobieren kannst
+
+| Station | Experimentieridee |
+| --- | --- |
+| 1 | Die Frage ändern und Retrieval-Treffer mit der generierten Antwort vergleichen. |
+| 2 | `CHUNK_SIZE` und `OVERLAP` variieren; prüfen, ob wichtige Überschriften erhalten bleiben. |
+| 3 | Treffer mit und ohne Versionsfilter vergleichen. |
+| 4 | Dieselbe Frage mit Dense Retrieval und BM25 untersuchen; danach das RRF-Ranking betrachten. |
+| 5 | Eine Frage stellen, die der bereitgestellte Kontext nicht beantworten kann. |
+| 6 | Goldfragen und gefundene Chunks vergleichen; die vier Metriken interpretieren. |
+| 7 | Die Berechtigungsmatrix für verschiedene Benutzerrollen und Organisationen analysieren. |
+
+## Ergebnisse richtig interpretieren
+
+**Retrieval-Scores sind keine Wahrscheinlichkeiten.** Ein hoher Score oder eine geringe Distanz beweist weder die Korrektheit eines Dokuments noch die Richtigkeit der späteren Antwort.
+
+**Chunking beeinflusst, welche Informationen auffindbar sind.** Unterschiedliche Chunk-Grenzen bedeuten nicht automatisch, dass eine Strategie insgesamt besser ist. Das muss anhand von Testfragen untersucht werden.
+
+**Metadatenfilter sind regelbasiert.** Ein Versionsfilter schließt zum Beispiel historische Dokumente aus, erhöht aber nicht die semantische Ähnlichkeit der verbleibenden Treffer.
+
+**Quellenangaben sind keine Wahrheitsgarantie.** Eine Antwort kann ihrem Kontext treu sein und trotzdem einen Fehler enthalten, wenn die Quelle falsch oder veraltet ist. Ebenso garantiert ein entsprechender Prompt keine Faktentreue.
+
+**Retrieval-Evaluation ist nicht Antwort-Evaluation.** Die Metriken der Station 6 vergleichen gefundene Chunks mit einem vorbereiteten Goldset. Das kleine Testset ist kein unabhängiger wissenschaftlicher Benchmark. Die Fragen mit den erwarteten Verhaltensweisen `clarify`, `deny` und `no_answer` werden nicht wie normale beantwortbare Retrieval-Fragen bewertet.
+
+**Die ACL-Demo ist ein Lehrbeispiel.** Sie zeigt Berechtigungsentscheidungen, aber keine vollständige, sicher betriebene Zugriffskontrolle. In produktiven Anwendungen müssen Rechte serverseitig durchgesetzt werden. Die mitgelieferten synthetischen Dokumente sind im Schulungsprojekt lokal zugänglich.
+
+## Offline-Tests
+
+Die grundlegenden Tests benötigen keinen OpenAI-Schlüssel:
 
 ```powershell
 uv run python -m unittest discover -s tests -v
 ```
 
-Dieser Test benötigt **keinen** OpenAI-Schlüssel. Er prüft die Daten-/Evidence-Zuordnung, das beispielhafte Berechtigungsschema sowie Retrieval-Metriken und RRF. Er ersetzt **keinen** echten End-to-End-Test mit Chroma/OpenAI.
+Sie prüfen lokale Daten- und Evidence-Zuordnungen, Berechtigungsregeln und Retrieval-Metriken. Sie ersetzen keinen End-to-End-Test der API- und Chroma-Pipeline.
 
-## Was die Teilnehmer ausprobieren können
+## Daten und weiterführende Informationen
 
-- Station 1: Die Frage (`QUESTION`) ändern.
-- Station 2: `CHUNK_SIZE` und `OVERLAP` variieren.
-- Station 3: Versionsfilter aktivieren und vergleichen.
-- Station 4: Dense Ranking, BM25 und RRF vergleichen.
-- Station 5: Eine unbeantwortbare Frage stellen.
-- Station 6: Goldfragen gegen den gespeicherten Index prüfen.
-- Station 7: Rollen und Berechtigungsfälle diskutieren.
+Der Schulungs-Corpus enthält **16 fiktive Quelldokumente** in Markdown, HTML und CSV sowie **15 Testfragen**. Für **11 beantwortbare Testfragen** sind quantitative Retrieval-Bewertungen vorgesehen; weitere Fälle untersuchen beispielsweise Rückfragen oder Zugriffsverweigerung. Die Dokumente enthalten bewusst unterschiedliche Versionen und Zugriffsklassen.
 
-## Daten und Grenzen
+Weitere Details zu Datenherkunft, synthetischen Inhalten und Grenzen des Beispiels stehen in [`QUELLEN_UND_GRENZEN.md`](QUELLEN_UND_GRENZEN.md). Hinweise zur Herkunft und Lizenz enthält `TERALUNE_LICENSE-CODE`.
 
-- Der Mini-Corpus enthält 16 unveränderte Teralune-Quelldokumente (Markdown, HTML, CSV). Er enthält auch `customer`, `internal` und `restricted` Daten **ausschließlich als synthetisches Lehrmaterial**. Eine echte lokale Dateitrennung wird damit nicht sichergestellt.
-- Die 15 Fragen in `data/evaluation/questions.jsonl` stammen aus dem Smoke-Test. Nur elf beantwortbare Fragen mit vollständigen Evidence-Zuordnungen fließen in Retrieval-Metriken ein. Die übrigen prüfen `deny`, `clarify` und `no_answer` getrennt.
-- Ein Ranking-Score ist keine Wahrscheinlichkeit. Metadaten- und Zugriffsfilter verbessern nicht automatisch die Semantik, sondern begrenzen die zulässigen Kandidaten.
-- Reranking mit einem lokalen CrossEncoder und PyTorch ist **nicht** Bestandteil dieser Schulungsinstallation.
-
-## Installationstest und Versionsstand
-
-Die Projektstruktur, die uv-Konfiguration und der Lockfile wurden auf Konsistenz geprüft. Der `uv.lock` verwendet die passenden, bereits im Buchprojekt festgelegten Paketversionen. Weil in dieser Entwicklungsumgebung der externe Download gesperrt und kein Python 3.14 installiert ist, wurden **weder die komplette Installation auf Windows noch API-/Chroma-End-to-End-Aufrufe verifiziert**. Diese Tests müssen auf der vorgesehenen Schulungs-VM erfolgen.
-
-Quelldokumente und Grenzen: `QUELLEN_UND_GRENZEN.md`. Dozentennotizen: `DIDAKTIK.md`. Herkunft/Lizenz: `TERALUNE_LICENSE-CODE`.
+Die vollständige fachliche Erläuterung findest du im begleitenden **PDF-E-Book „Einführung in RAG mit Python“**.
