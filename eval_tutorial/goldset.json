@@ -1,0 +1,47 @@
+[
+  {
+    "id": "Q001",
+    "question": "How long is an Orbit 3.0 access token valid?",
+    "expected_answer": "60 minutes",
+    "evidence": [
+      {"document_id": "D002", "chunk_id": "D002_1", "text": "An Orbit 3.0 access token lasts 60 minutes."},
+      {"document_id": "D033", "chunk_id": "D033_1", "text": "The token lifetime is 60 minutes."},
+      {"document_id": "D005", "chunk_id": "D005_1", "text": "The access-token lifetime changes from 120 to 60 minutes."}
+    ]
+  },
+  {
+    "id": "Q002",
+    "question": "How long does Orbit 3.0 retry eligible failed webhook deliveries?",
+    "expected_answer": "72 hours",
+    "evidence": [
+      {"document_id": "D003", "chunk_id": "D003_1", "text": "Orbit 3.0 retries eligible failed webhook deliveries for 72 hours from the first attempt."},
+      {"document_id": "D033", "chunk_id": "D033_2", "text": "The webhook retry window is 72 hours."},
+      {"document_id": "D005", "chunk_id": "D005_1", "text": "The webhook retry window changes from 24 to 72 hours."}
+    ]
+  },
+  {
+    "id": "Q003",
+    "question": "How long does an Orbit cursor remain valid?",
+    "expected_answer": "15 minutes",
+    "evidence": [
+      {"document_id": "D022", "chunk_id": "D022_2", "text": "A cursor expires after 15 minutes and is bound to workspace, filters and sort order."}
+    ]
+  },
+  {
+    "id": "Q004",
+    "question": "How long should a receiver retain webhook deduplication records in Orbit 3.0?",
+    "expected_answer": "96 hours after first acceptance",
+    "evidence": [
+      {"document_id": "D003", "chunk_id": "D003_4", "text": "Retain receiver deduplication records for 96 hours after first acceptance."}
+    ]
+  },
+  {
+    "id": "Q005",
+    "question": "What is the Orbit 3.0 workspace request budget per minute?",
+    "expected_answer": "1000 requests per minute",
+    "evidence": [
+      {"document_id": "D033", "chunk_id": "D033_2", "text": "The workspace budget is 1000 requests per minute."},
+      {"document_id": "D005", "chunk_id": "D005_2", "text": "The workspace request budget changes from 500 to 1000 requests per minute."}
+    ]
+  }
+]

@@ -1,34 +1,18 @@
 """
-Station 08: Retrieval-Evaluation mit Goldfragen
-================================================
+Station 09: Retrieval-Evaluation mit Goldfragen
 
-LERNZIEL
---------
-Wir überprüfen, ob unsere Vektorsuche die richtigen Chunks findet.
+Lernziel:
+Überprüfen, ob die erwarteten Chunks unter den
+ersten k Suchergebnissen gefunden werden.
 
-Dazu verwenden wir Goldfragen:
-Für jede Frage legen wir vorher fest, welcher Chunk
-die benötigte Information enthält.
+Metrik:
+Hit@k
 
-METRIK: HIT@3
--------------
-Wir betrachten die ersten drei Suchergebnisse.
+Voraussetzung:
+uv run python -m stations.05_chroma_filter --index
 
-Ist der erwartete Chunk dabei?
-    Ja   -> Hit = 1
-    Nein -> Hit = 0
-
-Am Ende berechnen wir den Anteil erfolgreicher Fragen.
-
-WICHTIG
--------
-Wir bewerten nur das Retrieval, nicht die LLM-Antwort.
-
-Die Gold-Chunk-IDs müssen zum aktuellen Index passen.
-
-START
------
-uv run python -m stations.08_evaluation
+Start:
+uv run python -m stations.09_evaluation
 """
 
 from pathlib import Path
@@ -37,21 +21,15 @@ import chromadb
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# ============================================================
 # 1. Vorbereitung
-# ============================================================
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
-
 CHROMA_DIR = PROJECT_DIR / "data" / "chroma_05"
+
 COLLECTION_NAME = "teralune_metadata"
+EMBEDDING_MODEL = "text-embedding-3-small"
 
 TOP_K = 3
-
-# Goldfragen mit dem jeweils erwarteten Chunk.
-#
-# Diese IDs beziehen sich auf unser Structure Chunking.
-# Bei Änderungen am Chunking müssen wir sie überprüfen.
 
 GOLD_QUESTIONS = [
     {
@@ -73,12 +51,14 @@ load_dotenv(PROJECT_DIR / ".env")
 client = OpenAI()
 
 chroma = chromadb.PersistentClient(path=str(CHROMA_DIR))
-collection = chroma.get_collection(name=COLLECTION_NAME)
+
+try:
+    collection = chroma.get_collection(name=COLLECTION_NAME)
+except chromadb.errors.NotFoundError:
+    raise SystemExit("Collection fehlt. Zuerst Station 05 indexieren.")
 
 
-# ============================================================
 # 2. Goldfragen auswerten
-# ============================================================
 
 hits = 0
 
@@ -86,16 +66,12 @@ for item in GOLD_QUESTIONS:
     question = item["question"]
     gold_chunk = item["gold_chunk"]
 
-    # Suchfrage in einen Embedding-Vektor umwandeln.
-
     response = client.embeddings.create(
-        model="text-embedding-3-small",
+        model=EMBEDDING_MODEL,
         input=question,
     )
 
     question_vector = response.data[0].embedding
-
-    # Die drei ähnlichsten Chunks suchen.
 
     results = collection.query(
         query_embeddings=[question_vector],
@@ -104,37 +80,53 @@ for item in GOLD_QUESTIONS:
 
     found_ids = results["ids"][0]
 
-    # ========================================================
-    # 3. HIT@3 berechnen
-    # ========================================================
-
-    # Wir vergleichen die gefundenen Chunk-IDs
-    # mit dem erwarteten Gold-Chunk.
-    #
-    # Ist er unter den ersten drei Treffern,
-    # gilt die Frage als erfolgreich.
-
-    hit = gold_chunk in found_ids
-
-    if hit:
-        hits += 1
-
     print("\nFRAGE:", question)
     print("Erwartet:", gold_chunk)
     print("Gefunden:", found_ids)
-    print("Hit@3:", int(hit))
+
+    # TODO 1:
+    # Prüfe, ob gold_chunk in found_ids enthalten ist.
+    #
+    # Speichere das Ergebnis als Boolean in hit.
+    #
+    # Tipp: Verwende den Operator in.
+
+    # hit = ...
+
+    # TODO 2:
+    # Wenn hit True ist, erhöhe hits um 1.
+
+    # if hit:
+    #     ...
+
+    # print(f"Hit@{TOP_K}:", int(hit))
 
 
-# ============================================================
-# 4. Gesamtergebnis
-# ============================================================
-
-hit_rate = hits / len(GOLD_QUESTIONS)
+# 3. Gesamtergebnis
 
 print("\n" + "=" * 60)
 print("RETRIEVAL-EVALUATION")
 print("=" * 60)
 
 print("Goldfragen:", len(GOLD_QUESTIONS))
-print("Erfolgreich:", hits)
-print(f"Hit@3: {hit_rate:.1%}")
+
+# TODO 3:
+# Berechne die Hit-Rate.
+#
+# Formel:
+# Erfolgreiche Fragen / Anzahl aller Goldfragen
+
+# hit_rate = ...
+
+# print("Erfolgreich:", hits)
+# print(f"Hit@{TOP_K}: {hit_rate:.1%}")
+
+
+# 4. Experiment
+
+# Verändere TOP_K zwischen 1 und 3.
+# Wie verändert sich die Hit-Rate?
+#
+# Diskussionsfrage:
+# Reicht Hit@3 aus, um die Qualität eines
+# RAG-Systems zuverlässig zu beurteilen?

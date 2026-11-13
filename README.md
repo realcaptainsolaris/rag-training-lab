@@ -14,7 +14,7 @@ Praxisübungen zum Seminar **Retrieval-Augmented Generation (RAG) mit Python** a
 Öffne ein Terminal (PowerShell) und klone das GitHub-Repository:
 
 ```powershell
-git clone <REPOSITORY-URL>
+git clone https://github.com/realcaptainsolaris/rag-training-lab
 ```
 
 Wechsle anschließend in das Projektverzeichnis:
