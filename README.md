@@ -131,6 +131,7 @@ rag-training-lab/
 │   ├── images/              # Übungsbilder für Station 15
 │   └── teralune-mini/       # Fiktiver Dokumentenkorpus
 ├── stations/                # Python-Übungen 00 bis 15
+├── eval_tutorial/           # kleines Evaluationsprojekt
 ├── .python-version          # Python 3.14
 ├── env.example              # Vorlage für den API-Schlüssel
 ├── pyproject.toml           # Projekt und Abhängigkeiten
@@ -151,4 +152,4 @@ rag-training-lab/
 
 Der Teralune-/Orbit-Datenbestand ist **fiktives Schulungsmaterial**. Die Beispiele dienen dem Verständnis von Retrieval, RAG, Evaluation und Sicherheit; sie sind keine produktive API-Dokumentation.
 
-Weitere Erklärungen erhältst du im Seminar über die Folien, die begleitenden Stationsdokumente und die Buchreferenz.
+Weitere Erklärungen erhältst du im Seminar über die Folien, die begleitenden Stationsdokumente und die Buchreferenz [Einführung in RAG mit Python](https://docs.astral.sh/uv/getting-started/installation/)
